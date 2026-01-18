@@ -1,12 +1,3 @@
-CREATE TABLE levels (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(20) NOT NULL UNIQUE,
-  min_xp BIGINT NOT NULL CHECK (min_xp >= 0),
-  CONSTRAINT chk_name CHECK (
-    name IN ('BRONZE', 'PRATA', 'OURO', 'PLATINA', 'DIAMANTE')
-  )
-);
-
 CREATE TABLE user_achievements (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL REFERENCES users(id) ON DELETE RESTRICT,

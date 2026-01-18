@@ -1,14 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-CREATE EXTENSION IF NOT EXISTS citext;
-
-CREATE OR REPLACE FUNCTION set_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = now();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE TABLE users
 (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -17,7 +6,7 @@ CREATE TABLE users
   phone VARCHAR(20) UNIQUE,
   password_hash VARCHAR(255),
   provider VARCHAR(30) NOT NULL DEFAULT 'LOCAL',
-  level VARCHAR(20) NOT NULL DEFAULT 'BRONZE',
+  level_id uuid REFERENCES levels(id) ON DELETE RESTRICT,
   xp BIGINT NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -37,6 +26,16 @@ CREATE TABLE wallets (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE OR REPLACE FUNCTION set_default_user_level()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.level_id IS NULL THEN
+    SELECT id INTO NEW.level_id FROM levels WHERE name = 'BRONZE';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE TRIGGER trg_users_updated_at
 BEFORE UPDATE ON users
 FOR EACH ROW
@@ -46,5 +45,10 @@ CREATE TRIGGER trg_wallets_updated_at
 BEFORE UPDATE ON wallets
 FOR EACH ROW
 EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_users_default_level
+BEFORE INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION set_default_user_level();
 
 CREATE INDEX idx_users_is_active ON users(is_active);
