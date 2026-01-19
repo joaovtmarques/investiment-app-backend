@@ -44,6 +44,9 @@ public class Product {
   @JoinColumn(name = "category_id", nullable = false, updatable = false)
   private Category category;
 
+  @Column(name = "image_url", nullable = false)
+  private String imageUrl;
+
   @Column(name = "min_investment", nullable = false)
   private BigDecimal minInvestment;
 

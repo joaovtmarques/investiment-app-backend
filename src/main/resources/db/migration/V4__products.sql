@@ -10,6 +10,7 @@ CREATE TABLE products (
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
   category_id uuid NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
+  image_url VARCHAR(255) NOT NULL,
   min_investment NUMERIC(15,2) NOT NULL,
   max_units INTEGER NOT NULL CHECK (max_units > 0),
   units_sold INTEGER NOT NULL DEFAULT 0,
