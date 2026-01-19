@@ -1,8 +1,15 @@
+CREATE TABLE categories {
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(50) NOT NULL UNIQUE,
+  slug VARCHAR(50) NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+}
+
 CREATE TABLE products (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
-  category VARCHAR(50) NOT NULL,
+  category_id uuid NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   min_investment NUMERIC(15,2) NOT NULL,
   max_units INTEGER NOT NULL CHECK (max_units > 0),
   units_sold INTEGER NOT NULL DEFAULT 0,
