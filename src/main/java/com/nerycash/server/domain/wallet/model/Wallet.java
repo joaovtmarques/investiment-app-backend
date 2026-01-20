@@ -14,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +22,22 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "wallets")
 public class Wallet {
+
+  public Wallet(
+      User user,
+      BigDecimal availableBalance,
+      BigDecimal investedBalance,
+      BigDecimal receivableBalance) {
+    this.id = UUID.randomUUID();
+    this.user = user;
+    this.availableBalance = availableBalance;
+    this.investedBalance = investedBalance;
+    this.receivableBalance = receivableBalance;
+  }
 
   @EqualsAndHashCode.Include
   @Id
@@ -50,4 +60,11 @@ public class Wallet {
   @Column(name = "updated_at", nullable = false)
   private Instant updatedAt;
 
+  public static Wallet createFor(User user) {
+    return new Wallet(
+        user,
+        BigDecimal.ZERO,
+        BigDecimal.ZERO,
+        BigDecimal.ZERO);
+  }
 }
