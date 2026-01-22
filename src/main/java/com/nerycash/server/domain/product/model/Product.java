@@ -63,7 +63,7 @@ public class Product {
   private Integer estimatedDays;
 
   @Column(name = "risk_level", nullable = false)
-  private Integer riskLevel;
+  private Short riskLevel;
 
   @Column(name = "roi_average_30d", nullable = false)
   private BigDecimal roiAverage30d;

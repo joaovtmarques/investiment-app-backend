@@ -1,9 +1,9 @@
-CREATE TABLE categories {
+CREATE TABLE categories (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(50) NOT NULL UNIQUE,
   slug VARCHAR(50) NOT NULL UNIQUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-}
+);
 
 CREATE TABLE products (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -47,4 +47,5 @@ FOR EACH ROW
 EXECUTE FUNCTION set_updated_at();
 
 CREATE INDEX idx_products_status ON products(status);
-CREATE INDEX idx_products_category ON products(category);
+CREATE INDEX idx_products_category_fk ON products(category_id);
+

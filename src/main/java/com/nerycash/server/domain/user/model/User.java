@@ -55,7 +55,7 @@ public class User {
   @Column(nullable = false)
   private String name;
 
-  @Column(unique = true, nullable = false)
+  @Column(nullable = false, unique = true, columnDefinition = "citext")
   private String email;
 
   @Column(nullable = false, unique = true)
